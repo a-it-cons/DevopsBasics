@@ -20,3 +20,17 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+
+# Copy war file from s to a artifacts directory
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(agent.builddirectory)/s'
+    Contents: '**/*war'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+# Publish artifact to Azure
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'allWarFiles'
+    publishLocation: 'Container'
